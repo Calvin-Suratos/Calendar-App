@@ -1,0 +1,9 @@
+.calendar-container {
+  height: 75vh;
+  width: calc(100% - 10rem);
+  max-width: calc(100% - 10rem);
+  max-height: 75vh;
+  border: 1px solid black;
+  border-radius: var(--global-border-radius);
+  margin: 5rem;
+}

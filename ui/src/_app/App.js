@@ -5,8 +5,9 @@ import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
 import getDay from "date-fns/getDay";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-// import DatePicker from "react-datepicker";
 import config from '../_config/config'
+import './global.css';
+import TeamCalendar from '../_components/TeamCalendar/TeamCalendar.jsx';
 
 const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
 
@@ -22,41 +23,31 @@ const localizer = dateFnsLocalizer({
   locales
 })
 
-const events = [
-  {
-    title: 'Meeting One',
-    allDay: true,
-    start: new Date(2022, 7, 25),
-    end: new Date(2022, 7, 28)
-  },
-  {
-    title: 'Meeting Two',
-    allDay: false,
-    start: new Date(2022, 8, 5),
-    end: new Date(2022, 8, 28)
-  }
-]
-// new Date(year, monthIndex, day, hours, minutes)
 
 function App() {
 
-  let [names, setNames] = useState([ ]);
+  let [users, setUsers] = useState([ ]);
+
 
   useEffect(() => {
-    fetch(ApiUrl + "/authors")
+    
+    fetch(ApiUrl + "/users")
       .then(response => response.json())
-      .then(data => setNames(data))
+      .then(data => setUsers(data))
       .catch(err => console.log(err))
   }, []);
 
-
   return (
-    <div>
-      App is running - good work: 
-      { names.filter(author => author.firstName == 'Eric').map(author => author.firstName + " ")}
-
-      <Calendar localizer={localizer} events={events} startAccessor="start" endAccessor="end" style={{height: 500, margin: "50px"}}/>
-    </div>
+    <>
+      <div>
+        <h1 style={{textAlign: 'center'}}>Calendar</h1>
+          <TeamCalendar/>
+      </div>
+      <footer style={{position: 'fixed', bottom: '1vh', left: '0', right: '0', textAlign: 'center'}}>
+        {'Copyright © '} 
+        {users.map((user, index) => <span style={{color: user.color}} key={user.id}>{`${user.name} `}</span>)}
+      </footer>
+    </>
   );
 }
 
