@@ -1,0 +1,21 @@
+.legendDiv {
+  border: 1px solid black;
+  width: 20%;
+  border-radius: 1rem;
+  padding: 1%;
+  height: 25%;
+  margin-left: 2%;
+}
+
+h3 {
+  text-align: center;
+}
+
+footer {
+  position: 'fixed';
+  bottom: '1vh';
+  left: '0'; 
+  right: '0';
+  display: flex;
+  justify-content: center;
+}

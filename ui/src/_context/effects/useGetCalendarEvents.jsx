@@ -20,15 +20,16 @@ const useGetCalendarEvents = (setCalendarEvents) => {
   const getCalendarEvents = () => {
     smartApi(['GET', `events`])
       .then(result => {
+        if (result === undefined) throw(new Error);
         result.map(event => {
           event.title = event.name
-          console.log(parseDatetime(event.start_date));
           event.start = parseDatetime(event.start_date)
           event.end = parseDatetime(event.end_date);
         })
 
         setCalendarEvents(result)
       })
+      .catch(err => console.log(err));
   }
 
   return getCalendarEvents;

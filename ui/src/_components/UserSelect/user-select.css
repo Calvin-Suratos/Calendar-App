@@ -1,0 +1,26 @@
+/* .user-filter-container{
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  margin: 2rem;
+  border: 1px solid black;
+  z-index: 1000;
+  border-radius: var(--global-border-radius);
+  overflow: hidden;
+} */
+
+.user-filter-entry{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 2rem;
+  width: 11rem;
+}
+
+.user-checkbox{
+  margin: 0 1rem 0 1rem;
+}
+
+.user-name{
+  margin: 0 0rem 0 0rem;
+}

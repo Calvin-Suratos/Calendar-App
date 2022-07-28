@@ -9,6 +9,8 @@ const env = process.env.NODE_ENV || 'development'
 const config = require('../knexfile')[env]
 const knex = require('knex')(config)
 
+
+// ---- Read on Authors table -------
 app.get('/', (request, response) => {
     response.set("Access-Control-Allow-Origin", "*");
     response.status(200).send('Server is running. Good work');
@@ -21,9 +23,11 @@ app.get('/authors', (request, response) => {
             let responseData = authorRecords.map(author => ({ firstName: author.first_name, lastName: author.last_name}));
             response.status(200).send(responseData)
         })
-
 })
 
+
+
+// ---- RU on Users Table -------
 app.get('/users', (req, res) => {
     knex('users')
     .select('*')
@@ -31,6 +35,21 @@ app.get('/users', (req, res) => {
     .catch(() => res.status(400).send('Could not retrieve data.'))
 })
 
+app.patch('/user/:userid', (req, res) => {
+    knex('users')
+    .where("id", "=", parseInt(req.params.userid))
+    .update(req.body)
+    .returning("*")
+    .then((data) => {
+        res.status(200).send(data);
+    })
+    .catch(() => res.status(404).send('Could not update user'))
+})
+
+
+
+
+// ---- Full CRUD on Events -------
 app.get('/events', (req, res) => {
     knex('events')
     .select('*')
@@ -38,6 +57,32 @@ app.get('/events', (req, res) => {
     .catch(() => res.status(400).send('Could not retrieve data.'))
 })
 
+app.post('/newuserevents', (req, res) => {
+    knex('events')
+    .insert(req.body)
+    .then(data => res.status(200).send(data))
+    .catch(() => res.status(400).send('Could not retrieve data'))
+})
+
+app.patch('/patchuserevents/:id', (req, res) => {
+    knex('events')
+    .update(req.body)
+    .where({id: req.params.id})
+    .then(data => res.status(200).send(data))
+    .catch(() => res.status(404).send('Could not update event'))
+})
+
+app.delete('/deleteuserevents/:id', (req, res) => {
+    knex('events')
+    .delete()
+    .where({id: req.params.id})
+    .then(data => res.status(200).json(data))
+    .catch(() => res.status(404).send('Could not update event'))
+})
+
+
+
+// --- Read on user events table -------
 app.get('/userevents/:id', (req, res) => {
     knex('events')
     .join('users', 'users.id', '=', 'events.users_id')
@@ -72,28 +117,5 @@ app.get('/userevents', (req, res) => {
     .catch(() => res.status(400).send('Could not retrieve data'))
 })
 
-
-app.post('/newuserevents', (req, res) => {
-    knex('events')
-    .insert(req.body)
-    .then(data => res.status(200).send(data))
-    .catch(() => res.status(400).send('Could not retrieve data'))
-})
-
-app.patch('/patchuserevents/:id', (req, res) => {
-    knex('events')
-    .update(req.body)
-    .where({id: req.params.id})
-    .then(data => res.status(200).send(data))
-    .catch(() => res.status(404).send('Could not update event'))
-})
-
-app.delete('/deleteuserevents/:id', (req, res) => {
-    knex('events')
-    .delete()
-    .where({id: req.params.id})
-    .then(data => res.status(200).json(data))
-    .catch(() => res.status(404).send('Could not update event'))
-})
 
 module.exports = app;

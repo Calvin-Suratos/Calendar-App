@@ -7,19 +7,13 @@ import getDay from "date-fns/getDay";
 import './team-calendar.css';
 import smartApi from '../../_helpers/smartApi.js';
 import { GlobalContext } from '../../_context/AppProvider';
-
-// import "react-big-calendar/lib/css/react-big-calendar.css";
-
-let users = [
-  {id: 1, name: 'Calvin', color: '#4c4db3'},
-  {id: 2, name: 'Cybyl', color: '#e8bed5'},
-  {id: 3, name: 'Kyle', color: '#d4e51a'},
-  {id: 4, name: 'Nehemiah', color: '#30cf86'}
-]
+// import { ReactDialogBox } from 'react-js-dialog-box'
 
 const TeamCalendar = () => {
   const { store } = useContext(GlobalContext);
-  const { calendarEvents, getCalendarEvents } = store;
+  const { calendarEvents, getCalendarEvents, userFilter, calendarUsers } = store;
+  
+  const [ filteredEvents, setFilteredEvents ] = useState([]);
 
   const locales = {
     "en-US": require("date-fns/locale/en-US")
@@ -35,37 +29,68 @@ const TeamCalendar = () => {
 
   useEffect(() => getCalendarEvents(), []);
 
+  useEffect(() => {
+    console.log("refreshing filtered events")
+    setFilteredEvents(filterEvents(calendarEvents))
+  }, [userFilter.length])
+
+  const filterEvents = (events) => {
+    console.log("UserFilter length", userFilter.length);
+
+    if ((userFilter !== undefined && userFilter.length > 0) && (events !== undefined && events.length > 0)) {
+      console.log(events.filter(event => userFilter.map(user => user.id === event.users_id)));
+      return events.filter(event => userFilter.map(user => user.id === event.users_id));
+      // return events.filter(event => userFilter.map(user => user.name).includes(event.name))
+    }
+
+    return events;
+  }
+
+  const getEventUserName = (event) => {
+    let eventUserId = event.users_id;
+    let userIndex = calendarUsers.findIndex(user => user.id === eventUserId);
+
+    return calendarUsers[userIndex].name;
+  }
+
+  const getEventColor = (event) => {
+    let eventUserId = event.users_id;
+    let userIndex = calendarUsers.findIndex(user => user.id === eventUserId);
+
+    return calendarUsers[userIndex].color;
+  }
+
+  const eventDialog = (event) => {
+    console.log(event);
+    alert(`
+      Title: ${event.name}\n
+      Description: ${event.description}\n
+      Start: ${event.start}\n
+      End: ${event.end}\n
+      User: ${getEventUserName(event)}
+    `);
+    return
+  }
+
   return (
     <div className="calendar-container">
+      {console.log("Filtered Events", filteredEvents)}
       <Calendar 
         localizer={localizer}
         events={calendarEvents}
         startAccessor="start"
         endAccessor="end"
-        style={{height: "calc(100% - 100px)", width: "calc(100% - 100px)", margin: "50px"}}/>
+        style={{height: "calc(100% - 100px)", width: "calc(100% - 100px)", margin: "50px"}}
+        eventPropGetter={(event, start, end, isSelected) => ({
+          event,
+          start,
+          end,
+          isSelected,
+          style: { backgroundColor: getEventColor(event) },
+        })}
+        onSelectEvent={(event) => {eventDialog(event)}}/>
     </div>
   )
 }
 
 export default TeamCalendar;
-
-
-// const events = [
-//   {
-//     title: 'Meeting One',
-//     allDay: true,
-//     start: new Date(2022, 7, 25), // months are zero-indexed
-//     end: new Date(2022, 7, 28),
-//     description: '',
-//     user: 'test'
-    
-//   },
-//   {
-//     title: 'Meeting Two',
-//     allDay: false,
-//     start: new Date(2022, 8, 5),
-//     end: new Date(2022, 8, 28),
-//     description: 'dentist',
-//     user: 'Calvin'
-//   }
-// ]

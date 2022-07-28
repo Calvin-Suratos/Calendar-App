@@ -3,11 +3,22 @@ import ReactDOM from 'react-dom';
 import App from './_app/App';
 import reportWebVitals from './reportWebVitals';
 import { AppProvider } from './_context/AppProvider';
+// date-fns
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+// or for Day.js
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+// or for Luxon
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+// or for Moment.js
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { LocalizationProvider } from '@mui/x-date-pickers';
 
 ReactDOM.render(
   <React.StrictMode>
     <AppProvider>
-      <App />
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <App />
+      </LocalizationProvider>
     </AppProvider>
   </React.StrictMode>,
   document.getElementById('root')
