@@ -29,7 +29,7 @@ function App() {
     <>
       <Paper sx={{margin: '8px', padding: '4px', backgroundColor: 'rgba(95, 158, 160, 0.8)', boxShadow: '0 0 4px 0.2px black', textAlign:'center', fontVariant: 'small-caps'}}><h1>Calendar</h1></Paper>
       <Paper sx={{margin: '8px', padding: '4px', backgroundColor: 'rgba(95, 158, 160, 0.3)', boxShadow: '0 0 4px 0.2px black', textAlign: 'center', fontVariant: 'small-caps'}}><NewEvent/></Paper>
-      <div style={{display: 'flex', justifyContent: 'center', padding: '5%'}}>
+      <div style={{display: 'flex', justifyContent: 'center', padding: '2.5%'}}>
         <TeamCalendar/>
         <div className='legendDiv'>
           <h3 className='legend'>Legend</h3>

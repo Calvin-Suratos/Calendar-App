@@ -9,7 +9,7 @@ exports.seed = async function(knex) {
   await knex('users').insert([
     {name: 'Calvin Suratos', color: 'wheat'},
     {name: 'Nehemiah Alvarado', color: 'blue'},
-    {name: 'Cybyl Hancock', color: 'grey'},
-    {name: 'Kyle Dilick', color: 'pink'}
+    {name: 'Cybyl Hancock', color: 'pink'},
+    {name: 'Kyle Dilick', color: 'grey'}
   ]);
 };

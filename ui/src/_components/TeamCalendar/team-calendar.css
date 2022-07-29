@@ -5,4 +5,5 @@
   max-height: 75vh;
   border: 1px solid black;
   border-radius: var(--global-border-radius);
+  /* background-color: rgb(137, 154, 154); */
 }

@@ -7,17 +7,17 @@ import getDay from "date-fns/getDay";
 import './team-calendar.css';
 import smartApi from '../../_helpers/smartApi.js';
 import { GlobalContext } from '../../_context/AppProvider';
-// import { ReactDialogBox } from 'react-js-dialog-box'
 
 const TeamCalendar = () => {
   const { store } = useContext(GlobalContext);
   const { calendarEvents, getCalendarEvents, userFilter, calendarUsers } = store;
-  
   const [ filteredEvents, setFilteredEvents ] = useState([]);
+  const locales = {"en-US": require("date-fns/locale/en-US")}
 
-  const locales = {
-    "en-US": require("date-fns/locale/en-US")
-  }
+  useEffect(() => getCalendarEvents(), []);
+  useEffect(() => {
+    setFilteredEvents(filterEvents(calendarEvents))
+  }, [userFilter.length])
   
   const localizer = dateFnsLocalizer({
     format,
@@ -27,41 +27,26 @@ const TeamCalendar = () => {
     locales
   })
 
-  useEffect(() => getCalendarEvents(), []);
-
-  useEffect(() => {
-    console.log("refreshing filtered events")
-    setFilteredEvents(filterEvents(calendarEvents))
-  }, [userFilter.length])
-
   const filterEvents = (events) => {
-    console.log("UserFilter length", userFilter.length);
-
     if ((userFilter !== undefined && userFilter.length > 0) && (events !== undefined && events.length > 0)) {
-      console.log(events.filter(event => userFilter.map(user => user.id === event.users_id)));
       return events.filter(event => userFilter.map(user => user.id === event.users_id));
-      // return events.filter(event => userFilter.map(user => user.name).includes(event.name))
     }
-
     return events;
   }
 
   const getEventUserName = (event) => {
     let eventUserId = event.users_id;
     let userIndex = calendarUsers.findIndex(user => user.id === eventUserId);
-
     return calendarUsers[userIndex].name;
   }
 
   const getEventColor = (event) => {
     let eventUserId = event.users_id;
     let userIndex = calendarUsers.findIndex(user => user.id === eventUserId);
-
-    // return calendarUsers[userIndex].color;
+    return calendarUsers[userIndex].color;
   }
 
-  const eventDialog = (event) => {
-    console.log(event);
+  const eventDetailsPopup = (event) => {
     alert(`
       Title: ${event.name}\n
       Description: ${event.description}\n
@@ -74,21 +59,21 @@ const TeamCalendar = () => {
 
   return (
     <div className="calendar-container">
-      {console.log("Filtered Events", filteredEvents)}
       <Calendar 
         localizer={localizer}
         events={calendarEvents}
         startAccessor="start"
         endAccessor="end"
         style={{height: "calc(100% - 100px)", width: "calc(100% - 100px)", margin: "50px"}}
+        onSelectEvent={(event) => {eventDetailsPopup(event)}}
         eventPropGetter={(event, start, end, isSelected) => ({
           event,
           start,
           end,
           isSelected,
-          style: { backgroundColor: getEventColor(event) },
+          style: { backgroundColor: getEventColor(event)},
         })}
-        onSelectEvent={(event) => {eventDialog(event)}}/>
+        />
     </div>
   )
 }

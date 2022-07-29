@@ -5,7 +5,6 @@ import './user-select.css';
 const UserSelect = () => {
   const { store } = useContext(GlobalContext);
   const { calendarUsers, selectedUser, setSelectedUser, userFilter, setUserFilter } = store;
-
   const [ localRefresh, setLocalRefresh ] = useState(false);
 
   const addUserToFilter = (user) => {
@@ -23,8 +22,6 @@ const UserSelect = () => {
   const filterHandler = (userToFilter) => {
     let userIndex = userFilter.findIndex(user => user.id === userToFilter.id);
     userIndex === -1 ? addUserToFilter(userToFilter) : removeUserFromFilter(userIndex);
-
-    // console.log(userFilter);
     setLocalRefresh(!localRefresh);
   }
 
@@ -32,7 +29,6 @@ const UserSelect = () => {
     if (userFilter !== undefined) {
       return userFilter.filter(user => user.id === userToCheck.id).length > 0;
     }
-
     return false;
   }
 
