@@ -57,7 +57,7 @@ const TeamCalendar = () => {
     let eventUserId = event.users_id;
     let userIndex = calendarUsers.findIndex(user => user.id === eventUserId);
 
-    return calendarUsers[userIndex].color;
+    // return calendarUsers[userIndex].color;
   }
 
   const eventDialog = (event) => {
